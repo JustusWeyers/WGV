@@ -1,0 +1,2 @@
+# WGV
+Weggrößenverfahren in R
