@@ -9,20 +9,20 @@ setClass(
 
     # "private"
     length = "numeric",
-    angle = "numeric",
-    loads = "list"
+    angle = "numeric"
   ),
   prototype = methods::prototype(
     E = NA_integer_,
     I = NA_integer_,
     A = NA_integer_,
     length = NA_integer_,
-    angle = NA_integer_,
-    loads = list()
-  )
+    angle = NA_integer_
+  ),
+  contains = "Element"
 )
 
 setMethod("initialize", "Bar", function(.Object = "Bar", a, b, E, I, A, ...){
+  
   .Object@a = a
   .Object@b = b
   .Object@E = E
@@ -55,10 +55,11 @@ setMethod("coords", signature("Bar"), function(self, xy) {
 
 setMethod("draw", signature("Bar"), function(self) {
   seg = grid::segmentsGrob(
-    x0 = unit(0, "native"), 
-    x1 = unit(self@length, "native"), 
+    x0 = grid::unit(0, "native"), 
+    x1 = grid::unit(self@length, "native"), 
     y0 = 0.5, 
     y1 = 0.5, 
-    gp = gpar(lwd = unit(2, "pt"))
+    gp = grid::gpar(lwd = grid::unit(2, "pt"))
   )
 })
+

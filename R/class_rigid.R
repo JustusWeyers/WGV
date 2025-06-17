@@ -7,9 +7,9 @@ setClass(
   prototype = methods::prototype(
     momentum = NA_integer_
   ),
-  contains = "Node"
+  contains = c("Element", "Node")
 )
 
 setMethod("draw", signature("Rigid"), function(self) {
-  
+  # Nothing
 })

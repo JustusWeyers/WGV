@@ -1,19 +1,24 @@
 
-
 setClass(
   Class = "Node",
   slots = representation(
     x = "numeric", 
     y = "numeric",
-    forces = "list",
-    bars = "list"
+    bars = "list",
+    c_phi = "numeric",
+    c_w = "numeric",
+    c_u = "numeric"
   ),
   prototype = methods::prototype(
     x = NA_integer_, 
     y = NA_integer_,
-    forces = list(),
-    bars = list()
-  )
+    bars = list(),
+    
+    c_phi = NA_integer_,
+    c_w = NA_integer_,
+    c_u = NA_integer_
+  ),
+  contains = "Element"
 )
 
 setGeneric("coords", function(self, xy = NULL) standardGeneric("coords"))
@@ -28,8 +33,6 @@ setMethod("coords", signature("Node"), function(self, xy = NULL) {
   }
 })
 
-setGeneric("draw", function(self) standardGeneric("draw"))
-
 setMethod("draw", signature("Node"), function(self) {
-  print("draw node")
+
 })

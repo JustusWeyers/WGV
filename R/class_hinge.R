@@ -6,9 +6,9 @@ setClass(
   prototype = methods::prototype(
     momentum = 0
   ),
-  contains = "Node"
+  contains = c("Element", "Node")
 )
 
 setMethod("draw", signature("Hinge"), function(self) {
-  grid::circleGrob(x = self@x, y = self@y, r = 0.1)
+  grid::circleGrob(x = 0.5, y = 0.5, r = 0.11)
 })
