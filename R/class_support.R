@@ -2,24 +2,13 @@
 setClass(
   Class = "Support",
   slots = methods::representation(
-    angle = "numeric",
-    pinned = "logical"
+    
   ),
   prototype = methods::prototype(
-    angle = 0,
-    pinned = FALSE
+    
   ),
   contains = c("Element", "Node")
 )
-
-setMethod("initialize", "Support", function(.Object, ...) {
-
-  if (.Object@pinned & !is.na(.Object@c_u)) {
-    .Object@pinned = FALSE
-  }
-
-  return(.Object)
-})
 
 setMethod("draw", signature("Support"), function(self) {
   tri = grid::polygonGrob(
@@ -45,11 +34,7 @@ setMethod("draw", signature("Support"), function(self) {
     gp = grid::gpar(lwd = 2)
   )
   
-  if (self@pinned) {
-    tree = grid::gTree(children = grid::gList(tri_shrt, cl, seg))
-  } else {
-    tree = grid::gTree(children = grid::gList(tri, cl, seg))
-  }
+  tree = NULL
   
   return(tree)
 })

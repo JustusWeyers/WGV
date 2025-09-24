@@ -1,6 +1,6 @@
 setClass(
-  Class = "Hinge",
-  slots = representation(
+  Class = "FreeSupport",
+  slots = methods::representation(
     c_phi = "numeric",
     c_u = "numeric",
     c_w = "numeric"
@@ -10,10 +10,10 @@ setClass(
     c_u = NA_integer_,
     c_w = NA_integer_
   ),
-  contains = c("Element", "Node")
+  contains = c("Element", "Node", "Support")
 )
 
-setMethod("draw", signature("Hinge"), function(self) {
+setMethod("draw", signature("FreeSupport"), function(self) {
   
   tree = grid::gTree()
   
@@ -32,7 +32,6 @@ setMethod("draw", signature("Hinge"), function(self) {
     tree = spirale(tree)
   }
   
-  tree = grid::addGrob(tree, child = grid::circleGrob(x = 0.5, y = 0.5, r = 0.11))
-  
   grid::grid.draw(tree)
+  
 })

@@ -13,11 +13,24 @@ setClass(
   )
 )
 
+setGeneric("amount", function(self) standardGeneric("amount"))
+
+setMethod("amount", signature("Load"), function(self) {
+  return(max(self@amount))
+})
+
 setMethod("draw", signature("Load"), function(self) {
+  
+  if (self@amount >= 0) {
+    y = c(1, 0.55)
+  } else {
+    y = c(0.55, 1)
+  }
+  
   if (is(self@element, "Bar")) {
     grid::linesGrob(
       x = unit(c(self@element@length, self@element@length) * self@x, "native"),
-      y = c(1.0, 0.55),
+      y = y,
       arrow = grid::arrow(
         angle = 30,
         length = unit(0.25, "native")
@@ -26,8 +39,8 @@ setMethod("draw", signature("Load"), function(self) {
     )
   } else if (is(self@element, "Node")) {
     grid::linesGrob(
-      x = 0.5,
-      y = c(1.0, 0.55),
+      x = 0,
+      y = y,
       arrow = grid::arrow(
         angle = 30,
         length = unit(0.25, "native")

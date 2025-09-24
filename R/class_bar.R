@@ -53,6 +53,10 @@ setMethod("coords", signature("Bar"), function(self, xy) {
   }
 })
 
+setMethod("width", signature("Bar"), function(self) {
+  return(self@length)
+})
+
 setMethod("draw", signature("Bar"), function(self) {
   seg = grid::segmentsGrob(
     x0 = grid::unit(0, "native"), 

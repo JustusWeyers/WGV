@@ -61,7 +61,11 @@ setMethod("initialize", "Structure", function(.Object = "Structure", nodes, bars
     }
   }
   
-  .Object@max_load = max(sapply(.Object@loads, methods::slot, "amount"))
+  if (length(.Object@loads)>0) {
+    .Object@max_load = max(abs(sapply(.Object@loads, amount)))
+  } else {
+    .Object@max_load = 1
+  }
 
   .Object@extent = c(
     x = range(sapply(c(.Object@nodes), coords, "x")),
@@ -85,17 +89,24 @@ setMethod("view", signature("Structure"), function(self) {
       return(5)
     }
   }
-
-  Y = function(y, y1 = self@extent[["y1"]], y2 = self@extent[["y2"]]) {
+  
+  diff_ext = diff(c(
+    diff(c(self@extent[["x2"]], self@extent[["x1"]])),
+    diff(c(self@extent[["y2"]], self@extent[["y1"]]))
+  ))
+  
+  Y = function(y, y1 = self@extent[["y1"]], y2 = self@extent[["y2"]],
+               dext = diff_ext) {
     if (!identical(y1, y2)) {
-      (10-0)/(y2-y1)*(y-y1) + 0
+      (10-0)/(y2+diff_ext-y1)*(y-y1) + 0
     } else {
       return(5)
     }
   }
 
   grid::grid.newpage()
-
+  # grid::grid.draw(grid::roundrectGrob())
+  
   # Base viewport
   grid::pushViewport(grid::viewport(
     x = 0.125,
@@ -104,7 +115,6 @@ setMethod("view", signature("Structure"), function(self) {
     height = 0.75,
     just = c("left", "bottom"),
   ))
-
   # grid::grid.draw(grid::roundrectGrob())
 
   grid::pushViewport(grid::viewport(
@@ -115,14 +125,9 @@ setMethod("view", signature("Structure"), function(self) {
     xscale = grid::unit(c(0, 10), "cm"),
     yscale = grid::unit(c(0, 10), "cm")
   ))
-
   # grid::grid.draw(grid::roundrectGrob())
-
+  
   for (bar in self@bars) {
-    print("Test")
-    print(bar@a)
-    print("---")
-    print(print(bar@b))
     grid::pushViewport(grid::viewport(
       x = grid::unit(X(bar@a@x), "native"),
       y = grid::unit(Y(bar@a@y), "native"),
@@ -136,36 +141,43 @@ setMethod("view", signature("Structure"), function(self) {
       just = c("left", "center"),
       xscale = grid::unit(c(0, bar@length), "native")
     ))
-    
+    # grid::grid.draw(grid::roundrectGrob())
     
     grid::grid.draw(draw(bar))
-    
-    for (load in bar@loads) {
-      grid::grid.draw(draw(load))
-    }
 
     grid::popViewport(n = 1)
   }
 
   for (node in self@nodes) {
     grid::pushViewport(grid::viewport(
-      x = grid::unit(X(node@x)-0.5, "native"),
+      x = grid::unit(X(node@x), "native"),
       y = grid::unit(Y(node@y), "native"),
       width = grid::unit(1, "native"),
       height = grid::unit(1, "native"),
-      angle = 0,
+      angle = node@angle,
+      just = c("center", "center"),
+    ))
+    # grid::grid.draw(grid::roundrectGrob())
+    
+    grid::grid.draw(draw(node))
+    
+    grid::popViewport(n = 1)
+  }
+  
+  for (load in self@loads) {
+    grid::pushViewport(grid::viewport(
+      x = grid::unit(X(coords(load@element, "x")[1]), "native"),
+      y = grid::unit(Y(coords(load@element, "y")[1]), "native"),
+      width = grid::unit(X(width(load@element)), "native"),
+      height = grid::unit(1.5*abs(max(amount(load)))/self@max_load, "native"),
+      angle = load@element@angle + load@angle,
       just = c("left", "center"),
     ))
     # grid::grid.draw(grid::roundrectGrob())
-    grid::grid.draw(draw(node))
-
-    print(node@loads)
-    for (load in node@loads) {
-      grid::grid.draw(draw(load))
-    }
-
+    
+    grid::grid.draw(draw(load))
+    
     grid::popViewport(n = 1)
   }
   
 })
-

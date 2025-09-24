@@ -4,19 +4,14 @@ setClass(
   slots = representation(
     x = "numeric", 
     y = "numeric",
-    bars = "list",
-    c_phi = "numeric",
-    c_w = "numeric",
-    c_u = "numeric"
+    angle = "numeric",
+    bars = "list"
   ),
   prototype = methods::prototype(
     x = NA_integer_, 
     y = NA_integer_,
-    bars = list(),
-    
-    c_phi = NA_integer_,
-    c_w = NA_integer_,
-    c_u = NA_integer_
+    angle = 0,
+    bars = list()
   ),
   contains = "Element"
 )
@@ -31,6 +26,12 @@ setMethod("coords", signature("Node"), function(self, xy = NULL) {
   } else {
     return(c(self@x, self@y))
   }
+})
+
+setGeneric("width", function(self) standardGeneric("width"))
+
+setMethod("width", signature("Node"), function(self) {
+  return(1)
 })
 
 setMethod("draw", signature("Node"), function(self) {
